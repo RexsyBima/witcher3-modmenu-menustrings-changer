@@ -1,6 +1,5 @@
 from bs4 import BeautifulSoup
 import shutil
-
 import sys
 
 IDs = (
