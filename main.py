@@ -1,6 +1,12 @@
 from bs4 import BeautifulSoup
 import shutil
 import sys
+from pathlib import Path
+
+
+def check_file_is_xml(filename: str) -> bool:
+    return Path(filename).suffix == ".xml"
+
 
 IDs = (
     "alchemy_and_equipment",
@@ -26,7 +32,11 @@ def select_id_category():
 
 
 def main():
+    assert len(sys.argv) > 1, "Error: Please provide the .xml file you want to edit"
     filename = sys.argv[1]
+    assert check_file_is_xml(filename), (
+        f"Error: Please provide correct .xml file you want to edit, current argument file is {filename}"
+    )
     with open(filename, "r") as f:
         data = f.read()
     soup = BeautifulSoup(data, "xml")
@@ -39,6 +49,7 @@ def main():
     shutil.move(filename, filename + ".bak")
     with open(filename, "w", encoding="utf-8") as f:
         f.write(str(soup))
+    print(f"Success, the original file has been backed up as {filename + '.bak'}")
 
 
 if __name__ == "__main__":
