@@ -5,7 +5,13 @@ from pathlib import Path
 
 import os
 
-base_dir = "/media/KAIZEN/The Witcher 3 Wild Hunt GOTY/bin/config/r4game/user_config_matrix/pc/"
+GAME_DIR = Path("/media/KAIZEN/The Witcher 3 Wild Hunt GOTY")
+XML_LOCATION = Path("bin/config/r4game/user_config_matrix/pc")
+
+FULL_PATH = GAME_DIR / XML_LOCATION
+
+print(FULL_PATH)
+
 
 EXCLUDED_FILES_XML = (
     "audio.xml",
@@ -18,18 +24,21 @@ EXCLUDED_FILES_XML = (
     "hidden.xml",
     "hud.xml",
     "localization.xml",
+    "input.xml",
 )
 
 
-def retrieve_xml_files():
-    for file in os.listdir(base_dir):
-        full_path = os.path.join(base_dir, file)
+def retrieve_xml_files() -> list[str]:
+    output = []
+    for file in os.listdir(FULL_PATH):
+        full_path = os.path.join(FULL_PATH, file)
         if (
             os.path.isfile(full_path)
             and file not in EXCLUDED_FILES_XML
             and Path(file).suffix == ".xml"
         ):
-            print(full_path)
+            output.append(full_path)
+    return output
 
 
 def check_file_is_xml(filename: str) -> bool:
@@ -82,4 +91,20 @@ def main():
 
 if __name__ == "__main__":
     # main()
-    retrieve_xml_files()
+    xml_files = retrieve_xml_files()
+
+    print("founded modded xml files:")
+    for i, file in enumerate(xml_files, 1):
+        print(f"{i}. {file.split('/')[-1]}")
+    mod_target_input = int(
+        input(f"Please input your choice from 1 to {len(xml_files)}: ")
+    )
+    assert mod_target_input in range(1, len(xml_files) + 1), "invalid choice"
+    mod_target_input -= 1
+    mod_target = xml_files[mod_target_input]
+    with open(mod_target, "r") as f:
+        data = f.read()
+    soup = BeautifulSoup(data, "xml")
+    groups = soup.find_all("Group")
+    print(groups[0].prettify())
+    # category = select_id_category()
