@@ -3,6 +3,34 @@ import shutil
 import sys
 from pathlib import Path
 
+import os
+
+base_dir = "/media/KAIZEN/The Witcher 3 Wild Hunt GOTY/bin/config/r4game/user_config_matrix/pc/"
+
+EXCLUDED_FILES_XML = (
+    "audio.xml",
+    "display.xml",
+    "gameplay.xml",
+    "gamma.xml",
+    "graphics.xml",
+    "graphicsdx11.xml",
+    "hdr.xml",
+    "hidden.xml",
+    "hud.xml",
+    "localization.xml",
+)
+
+
+def retrieve_xml_files():
+    for file in os.listdir(base_dir):
+        full_path = os.path.join(base_dir, file)
+        if (
+            os.path.isfile(full_path)
+            and file not in EXCLUDED_FILES_XML
+            and Path(file).suffix == ".xml"
+        ):
+            print(full_path)
+
 
 def check_file_is_xml(filename: str) -> bool:
     return Path(filename).suffix == ".xml"
@@ -53,4 +81,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    retrieve_xml_files()
