@@ -9,6 +9,7 @@ import os
 
 CONFIG_FILE = Path.cwd() / ".witcher3_modmenu_config.json"
 XML_LOCATION = Path("bin/config/r4game/user_config_matrix/pc")
+BACKUP_DIR = Path.cwd() / "backup"
 
 
 def get_game_dir() -> tuple[Path, bool]:
@@ -84,12 +85,24 @@ IDs = (
 )
 
 
+IDs2 = (
+    "Alchemy and Equipment",
+    "Characters",
+    "Combat",
+    "Gameplay",
+    "Quests and Adventures",
+    "User Interface",
+    "Visuals and Graphics",
+    "Miscellaneous",
+)
+
+
 def change_display_name(input_: str, target: str) -> str:
     return input_.replace("Mods.", f"Mods.{target}.", 1)
 
 
 def select_id_category():
-    for i, id in enumerate(IDs, 1):
+    for i, id in enumerate(IDs2, 1):
         print(f"{i}. {id}")
     return IDs[int(input(f"Please select_id_category from 1 to {len(IDs)} > ")) - 1]
 
@@ -110,8 +123,9 @@ def main():
         assert isinstance(display_name, str)
         g["displayName"] = change_display_name(display_name, category)
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    backup_path = f"{filename}.{timestamp}.bak"
-    shutil.move(filename, backup_path)
+    backup_filename = f"{Path(filename).name}.{timestamp}.bak"
+    backup_path = BACKUP_DIR / backup_filename
+    shutil.copy2(filename, backup_path)
     with open(filename, "w", encoding="utf-8") as f:
         f.write(str(soup))
     print(f"Success, the original file has been backed up as {backup_path}")
@@ -120,6 +134,7 @@ def main():
 if __name__ == "__main__":
     GAME_DIR, IS_FIRST_RUN = get_game_dir()
     FULL_PATH = GAME_DIR / XML_LOCATION
+    BACKUP_DIR.mkdir(exist_ok=True)
 
     if not IS_FIRST_RUN:
         print(f"Game path loaded. You can change it by editing {CONFIG_FILE}")
@@ -146,8 +161,9 @@ if __name__ == "__main__":
         assert isinstance(display_name, str)
         g["displayName"] = change_display_name(display_name, category)
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    backup_path = f"{mod_target}.{timestamp}.bak"
-    shutil.move(mod_target, backup_path)
+    backup_filename = f"{Path(mod_target).name}.{timestamp}.bak"
+    backup_path = BACKUP_DIR / backup_filename
+    shutil.copy2(mod_target, backup_path)
     with open(mod_target, "w", encoding="utf-8") as f:
         f.write(str(soup))
     print(f"Success, the original file has been backed up as {backup_path}")
