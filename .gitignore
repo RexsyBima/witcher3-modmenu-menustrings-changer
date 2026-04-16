@@ -11,3 +11,6 @@ wheels/
 
 *.xml
 *.bak
+
+
+.witcher3_modmenu_config.json
