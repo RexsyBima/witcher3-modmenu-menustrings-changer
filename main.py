@@ -1,16 +1,42 @@
 from bs4 import BeautifulSoup
+from datetime import datetime
 import shutil
 import sys
 from pathlib import Path
+import json
 
 import os
 
-GAME_DIR = Path("/media/KAIZEN/The Witcher 3 Wild Hunt GOTY")
+CONFIG_FILE = Path.cwd() / ".witcher3_modmenu_config.json"
 XML_LOCATION = Path("bin/config/r4game/user_config_matrix/pc")
 
-FULL_PATH = GAME_DIR / XML_LOCATION
 
-print(FULL_PATH)
+def get_game_dir() -> tuple[Path, bool]:
+    if CONFIG_FILE.exists():
+        with open(CONFIG_FILE, "r") as f:
+            config = json.load(f)
+            return Path(config["game_dir"]), False
+
+    print("Welcome! This appears to be your first time running this tool.")
+    print("Please enter the path to your Witcher 3 game folder:")
+    game_dir = Path(input("> ").strip())
+
+    while True:
+        if game_dir.exists() and (game_dir / XML_LOCATION).exists():
+            break
+        print(
+            "Invalid path or game config folder not found. Please try again or type 'exit' to quit:"
+        )
+        user_input = input("> ").strip()
+        if user_input.lower() == "exit":
+            sys.exit(0)
+        game_dir = Path(user_input)
+
+    with open(CONFIG_FILE, "w") as f:
+        json.dump({"game_dir": str(game_dir)}, f)
+    print(f"Game path saved. You can change it by editing {CONFIG_FILE}")
+
+    return game_dir, True
 
 
 EXCLUDED_FILES_XML = (
@@ -65,7 +91,7 @@ def change_display_name(input_: str, target: str) -> str:
 def select_id_category():
     for i, id in enumerate(IDs, 1):
         print(f"{i}. {id}")
-    return IDs[int(input(f"Please select_id_category from 1 to {len(IDs)}")) - 1]
+    return IDs[int(input(f"Please select_id_category from 1 to {len(IDs)} > ")) - 1]
 
 
 def main():
@@ -83,14 +109,20 @@ def main():
         display_name = g["displayName"]
         assert isinstance(display_name, str)
         g["displayName"] = change_display_name(display_name, category)
-    shutil.move(filename, filename + ".bak")
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    backup_path = f"{filename}.{timestamp}.bak"
+    shutil.move(filename, backup_path)
     with open(filename, "w", encoding="utf-8") as f:
         f.write(str(soup))
-    print(f"Success, the original file has been backed up as {filename + '.bak'}")
+    print(f"Success, the original file has been backed up as {backup_path}")
 
 
 if __name__ == "__main__":
-    # main()
+    GAME_DIR, IS_FIRST_RUN = get_game_dir()
+    FULL_PATH = GAME_DIR / XML_LOCATION
+
+    if not IS_FIRST_RUN:
+        print(f"Game path loaded. You can change it by editing {CONFIG_FILE}")
     xml_files = retrieve_xml_files()
 
     print("founded modded xml files:")
@@ -102,9 +134,20 @@ if __name__ == "__main__":
     assert mod_target_input in range(1, len(xml_files) + 1), "invalid choice"
     mod_target_input -= 1
     mod_target = xml_files[mod_target_input]
+    print("picked mod > " + xml_files[mod_target_input].split("/")[-1])
     with open(mod_target, "r") as f:
         data = f.read()
     soup = BeautifulSoup(data, "xml")
     groups = soup.find_all("Group")
-    print(groups[0].prettify())
-    # category = select_id_category()
+    # print(groups[0].prettify())
+    category = select_id_category()
+    for g in groups:
+        display_name = g["displayName"]
+        assert isinstance(display_name, str)
+        g["displayName"] = change_display_name(display_name, category)
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    backup_path = f"{mod_target}.{timestamp}.bak"
+    shutil.move(mod_target, backup_path)
+    with open(mod_target, "w", encoding="utf-8") as f:
+        f.write(str(soup))
+    print(f"Success, the original file has been backed up as {backup_path}")
