@@ -107,30 +107,6 @@ def select_id_category():
     return IDs[int(input(f"Please select_id_category from 1 to {len(IDs)} > ")) - 1]
 
 
-def main():
-    assert len(sys.argv) > 1, "Error: Please provide the .xml file you want to edit"
-    filename = sys.argv[1]
-    assert check_file_is_xml(filename), (
-        f"Error: Please provide correct .xml file you want to edit, current argument file is {filename}"
-    )
-    with open(filename, "r") as f:
-        data = f.read()
-    soup = BeautifulSoup(data, "xml")
-    groups = soup.find_all("Group")
-    category = select_id_category()
-    for g in groups:
-        display_name = g["displayName"]
-        assert isinstance(display_name, str)
-        g["displayName"] = change_display_name(display_name, category)
-    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    backup_filename = f"{Path(filename).name}.{timestamp}.bak"
-    backup_path = BACKUP_DIR / backup_filename
-    shutil.copy2(filename, backup_path)
-    with open(filename, "w", encoding="utf-8") as f:
-        f.write(str(soup))
-    print(f"Success, the original file has been backed up as {backup_path}")
-
-
 if __name__ == "__main__":
     GAME_DIR, IS_FIRST_RUN = get_game_dir()
     FULL_PATH = GAME_DIR / XML_LOCATION
