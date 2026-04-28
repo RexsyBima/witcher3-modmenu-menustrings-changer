@@ -141,8 +141,11 @@ def main():
     category = select_id_category()
     for g in groups:
         display_name = g["displayName"]
+        print("before > ", display_name)
         assert isinstance(display_name, str)
         g["displayName"] = change_display_name(display_name, category)
+        print("after > ", g["displayName"])
+    exit()
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     backup_filename = f"{Path(mod_target).name}.{timestamp}.bak"
     backup_path = BACKUP_DIR / backup_filename
