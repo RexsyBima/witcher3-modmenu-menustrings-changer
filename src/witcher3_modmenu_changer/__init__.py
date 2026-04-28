@@ -114,6 +114,15 @@ GAME_DIR, IS_FIRST_RUN = get_game_dir()
 FULL_PATH = GAME_DIR / XML_LOCATION
 
 
+def get_original_mod_name(mod_display_name: str):
+    output = []
+    strings = mod_display_name.split(".")
+    for s in strings:
+        if s not in IDs:
+            output.append(s)
+    return ".".join(output)
+
+
 def main():
     GAME_DIR, IS_FIRST_RUN = get_game_dir()
     FULL_PATH = GAME_DIR / XML_LOCATION
@@ -141,11 +150,12 @@ def main():
     category = select_id_category()
     for g in groups:
         display_name = g["displayName"]
-        print("before > ", display_name)
+        # print("before > ", display_name)
         assert isinstance(display_name, str)
-        g["displayName"] = change_display_name(display_name, category)
-        print("after > ", g["displayName"])
-    exit()
+        g["displayName"] = change_display_name(
+            get_original_mod_name(display_name), category
+        )
+        # print("after > ", g["displayName"])
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     backup_filename = f"{Path(mod_target).name}.{timestamp}.bak"
     backup_path = BACKUP_DIR / backup_filename
