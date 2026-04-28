@@ -45,7 +45,13 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 3. Run:
 
 ```bash
-uv run python main.py
+uv sync
+source .venv/bin/activate && w3mc
+```
+
+```fish
+uv sync
+source .venv/bin/activate.fish && w3mc
 ```
 
 That's it! `uv` will automatically set up Python and install dependencies
