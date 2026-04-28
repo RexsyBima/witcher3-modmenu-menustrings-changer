@@ -1,12 +1,18 @@
-
 [project]
 name = "witcher3-modmenu-changer"
 version = "0.1.0"
-description = "A tool to modify Witcher 3 mod menu configuration"
+description = "Add your description here"
 readme = "README.md"
+authors = [{ name = "rexsy.bima", email = "rexsy.bimq" }]
 requires-python = ">=3.11"
-dependencies = ["beautifulsoup4>=4.14.3", "lxml>=6.0.2"]
+dependencies = [
+    "beautifulsoup4>=4.14.3",
+    "lxml>=6.1.0",
+]
 
 [project.scripts]
-w3mc = "main:main"
+w3mc = "witcher3_modmenu_changer:main"
 
+[build-system]
+requires = ["uv_build>=0.9.27,<0.10.0"]
+build-backend = "uv_build"
