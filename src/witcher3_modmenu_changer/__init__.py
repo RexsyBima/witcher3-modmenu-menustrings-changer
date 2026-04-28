@@ -12,6 +12,44 @@ import os
 CONFIG_FILE = Path.cwd() / ".witcher3_modmenu_config.json"
 XML_LOCATION = Path("bin/config/r4game/user_config_matrix/pc")
 BACKUP_DIR = Path.cwd() / "backup"
+IDs = (
+    "alchemy_and_equipment",
+    "camera",
+    "characters",
+    "combat",
+    "gameplay",
+    "quests_and_adventures",
+    "user_interface",
+    "visuals_and_graphics",
+    "miscellaneous",
+)
+
+
+IDs2 = (
+    "Alchemy and Equipment",
+    "Camera",
+    "Characters",
+    "Combat",
+    "Gameplay",
+    "Quests and Adventures",
+    "User Interface",
+    "Visuals and Graphics",
+    "Miscellaneous",
+)
+
+EXCLUDED_FILES_XML = (
+    "audio.xml",
+    "display.xml",
+    "gameplay.xml",
+    "gamma.xml",
+    "graphics.xml",
+    "graphicsdx11.xml",
+    "hdr.xml",
+    "hidden.xml",
+    "hud.xml",
+    "localization.xml",
+    "input.xml",
+)
 
 
 def get_game_dir() -> tuple[Path, bool]:
@@ -42,19 +80,8 @@ def get_game_dir() -> tuple[Path, bool]:
     return game_dir, True
 
 
-EXCLUDED_FILES_XML = (
-    "audio.xml",
-    "display.xml",
-    "gameplay.xml",
-    "gamma.xml",
-    "graphics.xml",
-    "graphicsdx11.xml",
-    "hdr.xml",
-    "hidden.xml",
-    "hud.xml",
-    "localization.xml",
-    "input.xml",
-)
+GAME_DIR, IS_FIRST_RUN = get_game_dir()
+FULL_PATH = GAME_DIR / XML_LOCATION
 
 
 def retrieve_xml_files() -> list[str]:
@@ -74,32 +101,6 @@ def check_file_is_xml(filename: str) -> bool:
     return Path(filename).suffix == ".xml"
 
 
-IDs = (
-    "alchemy_and_equipment",
-    "camera",
-    "characters",
-    "combat",
-    "gameplay",
-    "quests_and_adventures",
-    "user_interface",
-    "visuals_and_graphics",
-    "miscellaneous",
-)
-
-
-IDs2 = (
-    "Alchemy and Equipment",
-    "Camera",
-    "Characters",
-    "Combat",
-    "Gameplay",
-    "Quests and Adventures",
-    "User Interface",
-    "Visuals and Graphics",
-    "Miscellaneous",
-)
-
-
 def change_display_name(input_: str, target: str) -> str:
     return input_.replace("Mods.", f"Mods.{target}.", 1)
 
@@ -108,10 +109,6 @@ def select_id_category():
     for i, id in enumerate(IDs2, 1):
         print(f"{i}. {id}")
     return IDs[int(input(f"Please select_id_category from 1 to {len(IDs)} > ")) - 1]
-
-
-GAME_DIR, IS_FIRST_RUN = get_game_dir()
-FULL_PATH = GAME_DIR / XML_LOCATION
 
 
 def get_original_mod_name(mod_display_name: str):
