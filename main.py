@@ -107,7 +107,11 @@ def select_id_category():
     return IDs[int(input(f"Please select_id_category from 1 to {len(IDs)} > ")) - 1]
 
 
-if __name__ == "__main__":
+GAME_DIR, IS_FIRST_RUN = get_game_dir()
+FULL_PATH = GAME_DIR / XML_LOCATION
+
+
+def main():
     GAME_DIR, IS_FIRST_RUN = get_game_dir()
     FULL_PATH = GAME_DIR / XML_LOCATION
     BACKUP_DIR.mkdir(exist_ok=True)
