@@ -1,11 +1,10 @@
-from bs4 import BeautifulSoup
-from datetime import datetime
+import json
+import os
 import shutil
 import sys
+from datetime import datetime
 from pathlib import Path
-import json
-
-import os
+from bs4 import BeautifulSoup
 
 CONFIG_FILE = Path.cwd() / ".witcher3_modmenu_config.json"
 XML_LOCATION = Path("bin/config/r4game/user_config_matrix/pc")
