@@ -1,6 +1,9 @@
+// use serde_json;
 use std::env;
+use std::fs;
+use std::path::Path;
 // use std::ffi::OsStr;
-// use std::path::Path;
+use std::path::{self, PathBuf};
 
 const IDS: [&str; 9] = [
     "alchemy_and_equipment",
@@ -26,6 +29,57 @@ const IDS2: [&str; 9] = [
     "Miscellaneous",
 ];
 
+const EXCLUDED_FILES_XML: [&str; 11] = [
+    "audio.xml",
+    "display.xml",
+    "gameplay.xml",
+    "gamma.xml",
+    "graphics.xml",
+    "graphicsdx11.xml",
+    "hdr.xml",
+    "hidden.xml",
+    "hud.xml",
+    "localization.xml",
+    "input.xml",
+];
+
+/// Retrieve all XML files in directory, excluding excluded files.
+fn retrieve_xml_files(full_path: impl AsRef<Path>) -> Vec<String> {
+    let path = full_path.as_ref();
+    let mut output = Vec::new();
+
+    if !path.exists() || !path.is_dir() {
+        return output;
+    }
+
+    for entry in fs::read_dir(path).expect("Failed to read directory") {
+        let entry = match entry {
+            Ok(e) => e,
+            Err(_) => continue,
+        };
+        let file_path = entry.path();
+
+        if file_path.is_file() && file_path.extension().map_or(false, |ext| ext == "xml") {
+            // Filter exclusions by filename match
+            let filename = match file_path.file_name() {
+                Some(name) => name.to_string_lossy().to_lowercase(),
+                None => continue,
+            };
+
+            if EXCLUDED_FILES_XML
+                .iter()
+                .any(|&excluded| filename == excluded)
+            {
+                continue;
+            }
+
+            output.push(file_path.to_string_lossy().to_string());
+        }
+    }
+
+    output
+}
+
 fn main() {
     // CONFIG_FILE = Path.cwd() / ".witcher3_modmenu_config.json"
     // XML_LOCATION = Path("bin/config/r4game/user_config_matrix/pc")
@@ -38,8 +92,12 @@ fn main() {
     let backup_dir = env::current_dir()
         .expect("Get the backup directory")
         .join("backup");
+    let xml_location = Path::new(
+        "/media/KAIZEN/The Witcher 3 Wild Hunt GOTY/bin/config/r4game/user_config_matrix/pc",
+    );
 
-    println!("Hello, world!");
+    let xml_files = retrieve_xml_files(xml_location);
+    dbg!(xml_files);
     // println!("{}", config_file.display());
     // println!("{}", backup_dir.display());
 }
