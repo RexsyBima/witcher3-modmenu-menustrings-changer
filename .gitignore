@@ -14,3 +14,8 @@ wheels/
 
 
 .witcher3_modmenu_config.json
+
+
+# Added by cargo
+
+/target
