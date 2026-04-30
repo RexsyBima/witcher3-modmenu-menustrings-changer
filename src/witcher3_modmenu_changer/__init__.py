@@ -91,7 +91,7 @@ def retrieve_xml_files() -> list[str]:
         if (
             os.path.isfile(full_path)
             and file not in EXCLUDED_FILES_XML
-            and Path(file).suffix == ".xml"
+            and check_file_is_xml(file)
         ):
             output.append(full_path)
     return output
