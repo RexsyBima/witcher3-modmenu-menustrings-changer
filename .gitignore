@@ -11,6 +11,6 @@ wheels/
 
 *.xml
 *.bak
-
-
+.rustc_info.json
+target/
 .witcher3_modmenu_config.json
