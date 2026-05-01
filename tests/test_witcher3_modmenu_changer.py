@@ -44,6 +44,15 @@ class TestStringLogic(unittest.TestCase):
                 output.append(s)
         self.assertEqual(".".join(output), self.original_mod)
 
+    def test_get_original_mod_name_new_version(self):
+        output2 = []
+        output1 = ".".join(s for s in self.subject.split(".") if s not in self.IDs)
+        strings = self.subject.split(".")
+        for s in strings:
+            if s not in self.IDs:
+                output2.append(s)
+        self.assertEqual(".".join(output2), output1)
+
 
 if __name__ == "__main__":
     unittest.main()

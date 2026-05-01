@@ -110,12 +110,13 @@ def select_id_category():
 
 
 def get_original_mod_name(mod_display_name: str):
-    output = []
-    strings = mod_display_name.split(".")
-    for s in strings:
-        if s not in IDs:
-            output.append(s)
-    return ".".join(output)
+    return ".".join(s for s in mod_display_name.split(".") if s not in IDs)
+    # output = []
+    # strings = mod_display_name.split(".")
+    # for s in strings:
+    #     if s not in IDs:
+    #         output.append(s)
+    # return ".".join(output)
 
 
 def main():
