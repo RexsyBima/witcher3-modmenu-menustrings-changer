@@ -50,6 +50,17 @@ fn check_file_is_xml(filename: &str) -> bool {
         .unwrap_or(false)
 }
 
+/// Change display name for mod entries
+/// Replaces the first occurrence of "Mods." with "Mods.{target}."
+pub fn change_display_name(input_: &str, target: &str) -> String {
+    if !input_.contains("Mods.") {
+        return input_.to_string();
+    }
+
+    let (before_mods, rest) = input_.split_once("Mods.").expect("Found 'Mods.' marker");
+    format!("{}Mods.{}{}", before_mods, target, rest)
+}
+
 /// Retrieve all XML files in directory, excluding excluded files.
 fn retrieve_xml_files(full_path: impl AsRef<Path>) -> Vec<String> {
     let path = full_path.as_ref();
