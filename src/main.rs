@@ -43,6 +43,13 @@ const EXCLUDED_FILES_XML: [&str; 11] = [
     "input.xml",
 ];
 
+fn check_file_is_xml(filename: &str) -> bool {
+    Path::new(filename)
+        .extension()
+        .map(|e| e == "xml")
+        .unwrap_or(false)
+}
+
 /// Retrieve all XML files in directory, excluding excluded files.
 fn retrieve_xml_files(full_path: impl AsRef<Path>) -> Vec<String> {
     let path = full_path.as_ref();
