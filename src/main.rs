@@ -50,15 +50,16 @@ fn check_file_is_xml(filename: &str) -> bool {
         .unwrap_or(false)
 }
 
-/// Change display name for mod entries
-/// Replaces the first occurrence of "Mods." with "Mods.{target}."
-pub fn change_display_name(input_: &str, target: &str) -> String {
-    if !input_.contains("Mods.") {
-        return input_.to_string();
-    }
+fn change_display_name(input: &str, target: &str) -> String {
+    input.replacen("Mods.", &format!("Mods.{}.", target), 1)
+}
 
-    let (before_mods, rest) = input_.split_once("Mods.").expect("Found 'Mods.' marker");
-    format!("{}Mods.{}{}", before_mods, target, rest)
+fn get_original_mod_name(mod_display_name: &str) -> String {
+    mod_display_name
+        .split('.')
+        .filter(|s| !IDS.contains(s))
+        .collect::<Vec<&str>>()
+        .join(".")
 }
 
 /// Retrieve all XML files in directory, excluding excluded files.
