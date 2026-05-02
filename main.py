@@ -1,6 +1,5 @@
 from PySide6.QtCore import QSize
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QColor
 from PySide6.QtWidgets import (
     QApplication,
     QLabel,
@@ -23,7 +22,6 @@ from src.witcher3_modmenu_changer import (
     EXCLUDED_FILES_XML,
     retrieve_xml_files,
 )
-import sys
 
 
 xmls_file_path = retrieve_xml_files()
@@ -40,7 +38,9 @@ class MainApp(QMainWindow):
         super().__init__()
         layout = QHBoxLayout()
         layout1 = QVBoxLayout()
+        layout1.setAlignment(Qt.AlignmentFlag.AlignLeft)
         layout2 = QVBoxLayout()
+        layout2.setAlignment(Qt.AlignmentFlag.AlignLeft)
         self.setFixedSize(QSize(1280, 720))
         self.setWindowTitle("Witcher 3 Modmenu Changer")
         self.selected_item: None | str = None
@@ -73,24 +73,18 @@ class MainApp(QMainWindow):
 
         self.test_label = QLabel("HELLO1")
         self.current_mod_category_widget_label = QLabel("")
-        self.current_mod_category_widget_label.setFixedWidth(100)
         layout1.addWidget(xml_files_list_widget)
         layout1.addWidget(mod_total_widget)
 
         layout2.addWidget(category_choice)
         layout2.addWidget(submit_button_widget)
         layout2.addWidget(
-            self.current_mod_category_widget_label, alignment=Qt.AlignmentFlag.AlignTop
+            self.current_mod_category_widget_label,
         )
-        layout2.addWidget(self.test_label, alignment=Qt.AlignmentFlag.AlignTop)
-        # layout.addWidget(xml_files_list_widget)
-        # layout.addWidget(mod_total_widget)
+        layout2.addWidget(self.test_label)
         layout.addLayout(layout1)
         layout.addLayout(layout2)
-        # layout.addWidget(self.test_label)
-        # layout.addWidget(category_choice)
-        # layout.addWidget(self.current_mod_category_widget_label)
-        # layout.addWidget(submit_button_widget)
+
         widget = QWidget()
         widget.setLayout(layout)
         self.setCentralWidget(widget)
@@ -127,7 +121,7 @@ class MainApp(QMainWindow):
         print("Checked?", checked)
 
 
-app = QApplication(sys.argv)
+app = QApplication()
 window = MainApp()
 window.show()
 
