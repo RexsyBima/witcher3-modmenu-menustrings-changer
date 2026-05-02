@@ -55,6 +55,10 @@ class MainApp(QMainWindow):
         mod_total_widget.setStyleSheet("background-color: #3498db;")
         mod_total_widget.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
+        submit_button_widget = QPushButton("Set mod")
+        submit_button_widget.setDefault(True)
+        submit_button_widget.clicked.connect(self.set_mod)
+
         category_choice = QComboBox()
         self.selected_category_choice: str | None = None
         category_choice.addItems(IDs2)
@@ -77,9 +81,13 @@ class MainApp(QMainWindow):
         layout.addWidget(self.test_label)
         layout.addWidget(category_choice)
         layout.addWidget(self.current_mod_category_widget_label)
+        layout.addWidget(submit_button_widget)
         widget = QWidget()
         widget.setLayout(layout)
         self.setCentralWidget(widget)
+
+    def set_mod(self):
+        print(self.selected_category_choice)
 
     def get_item(self, index: int):
         self.selected_index = mod_list[index]
