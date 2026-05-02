@@ -53,6 +53,11 @@ class TestStringLogic(unittest.TestCase):
                 output2.append(s)
         self.assertEqual(".".join(output2), output1)
 
+    def test_get_mod_category(self):
+        mod = "Mods.characters.Appearances.SilverSwordSetting"
+        target = "".join(s for s in mod.split(".") if s in self.IDs)
+        self.assertEqual(target, "characters", msg=f"mod is {mod} target is {target}")
+
 
 if __name__ == "__main__":
     unittest.main()
