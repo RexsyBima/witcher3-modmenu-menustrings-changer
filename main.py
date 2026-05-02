@@ -1,4 +1,6 @@
 from PySide6.QtCore import QSize
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QColor
 from PySide6.QtWidgets import (
     QApplication,
     QLabel,
@@ -30,14 +32,20 @@ class MainApp(QMainWindow):
     def __init__(self):
         super().__init__()
         layout = QHBoxLayout()
+        layout1 = QVBoxLayout()
         self.setFixedSize(QSize(1280, 720))
         self.setWindowTitle("Witcher 3 Modmenu Changer")
         self.selected_item: None | str = None
+
         xml_files_list_widget = QListWidget()
         xml_files_list_widget.addItems(xml_files)
         xml_files_list_widget.currentRowChanged.connect(self.get_item)
         xml_files_list_widget.setFixedWidth(360)
-        test_label = QLabel("Hello world")
+
+        mod_total_widget = QLabel(f"Total mod : {len(xml_files)}")
+        mod_total_widget.setStyleSheet("background-color: #3498db;")
+        mod_total_widget.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
         category_choice = QComboBox()
         category_choice.addItems(IDs2)
         category_choice.currentIndexChanged.connect(self.index_changed)
@@ -46,7 +54,14 @@ class MainApp(QMainWindow):
         button.setCheckable(True)
         button.clicked.connect(self.print_ids)
         button.clicked.connect(self.the_button_was_toggled)
-        layout.addWidget(xml_files_list_widget)
+
+        layout1.addWidget(xml_files_list_widget)
+        layout1.addWidget(mod_total_widget)
+
+        test_label = QLabel("HELLO1")
+        # layout.addWidget(xml_files_list_widget)
+        # layout.addWidget(mod_total_widget)
+        layout.addLayout(layout1)
         layout.addWidget(test_label)
         widget = QWidget()
         widget.setLayout(layout)
