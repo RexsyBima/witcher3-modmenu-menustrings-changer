@@ -78,12 +78,10 @@ def get_game_dir() -> tuple[Path, bool]:
     return game_dir, True
 
 
-GAME_DIR, IS_FIRST_RUN = get_game_dir()
-FULL_PATH = GAME_DIR / XML_LOCATION
-
-
 def retrieve_xml_files() -> list[str]:
     output = []
+    GAME_DIR, _ = get_game_dir()
+    FULL_PATH = GAME_DIR / XML_LOCATION
     for file in os.listdir(FULL_PATH):
         full_path = os.path.join(FULL_PATH, file)
         if (
@@ -120,6 +118,8 @@ def get_original_mod_name(mod_display_name: str):
 
 
 def main():
+    GAME_DIR, IS_FIRST_RUN = get_game_dir()
+    FULL_PATH = GAME_DIR / XML_LOCATION
     GAME_DIR, IS_FIRST_RUN = get_game_dir()
     FULL_PATH = GAME_DIR / XML_LOCATION
     BACKUP_DIR.mkdir(exist_ok=True)
