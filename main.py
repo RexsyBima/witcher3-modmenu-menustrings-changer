@@ -188,7 +188,9 @@ class MainApp(QMainWindow):
         shutil.copy2(self.mod_filepath, backup_path)
         with open(self.mod_filepath, "w", encoding="utf-8") as f:
             f.write(str(self.soup))
-        # TODO: Display a success dialog
+        success_message_box = QMessageBox(self)
+        success_message_box.setText("The file has been modified")
+        success_message_box.exec()
 
     def get_item(self, index: int):
         self.selected_mod = self.mod_list[index]
