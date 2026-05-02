@@ -58,17 +58,18 @@ class MainApp(QMainWindow):
         layout1.addWidget(xml_files_list_widget)
         layout1.addWidget(mod_total_widget)
 
-        test_label = QLabel("HELLO1")
+        self.test_label = QLabel("HELLO1")
         # layout.addWidget(xml_files_list_widget)
         # layout.addWidget(mod_total_widget)
         layout.addLayout(layout1)
-        layout.addWidget(test_label)
+        layout.addWidget(self.test_label)
         widget = QWidget()
         widget.setLayout(layout)
         self.setCentralWidget(widget)
 
     def get_item(self, item: int):
         self.selected_item = xml_files[item]
+        self.test_label.setText(self.selected_item)
 
     def index_changed(self, index):
         print(index)
