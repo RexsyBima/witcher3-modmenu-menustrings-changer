@@ -40,6 +40,7 @@ class MainApp(QMainWindow):
         self.setFixedSize(QSize(1280, 720))
         self.setWindowTitle("Witcher 3 Modmenu Changer")
         self.selected_item: None | str = None
+        self.current_mod_category: None | str = None
 
         xml_files_list_widget = QListWidget()
         xml_files_list_widget.addItems(xml_files)
