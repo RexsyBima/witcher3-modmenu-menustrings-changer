@@ -78,10 +78,9 @@ def get_game_dir() -> tuple[Path, bool]:
     return game_dir, True
 
 
-def retrieve_xml_files() -> list[str]:
+def retrieve_xml_files(game_path: Path) -> list[str]:
     output = []
-    GAME_DIR, _ = get_game_dir()
-    FULL_PATH = GAME_DIR / XML_LOCATION
+    FULL_PATH = game_path / XML_LOCATION
     for file in os.listdir(FULL_PATH):
         full_path = os.path.join(FULL_PATH, file)
         if (
@@ -119,14 +118,11 @@ def get_original_mod_name(mod_display_name: str):
 
 def main():
     GAME_DIR, IS_FIRST_RUN = get_game_dir()
-    FULL_PATH = GAME_DIR / XML_LOCATION
-    GAME_DIR, IS_FIRST_RUN = get_game_dir()
-    FULL_PATH = GAME_DIR / XML_LOCATION
     BACKUP_DIR.mkdir(exist_ok=True)
 
     if not IS_FIRST_RUN:
         print(f"Game path loaded. You can change it by editing {CONFIG_FILE}")
-    xml_files = retrieve_xml_files()
+    xml_files = retrieve_xml_files(GAME_DIR)
 
     print("founded modded xml files:")
     for i, file in enumerate(xml_files, 1):
