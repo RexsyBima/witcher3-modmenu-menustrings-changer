@@ -25,6 +25,7 @@ from PySide6.QtWidgets import (
 from src.witcher3_modmenu_changer import (
     BACKUP_DIR,
     CONFIG_FILE,
+    XML_LOCATION,
     IDs,
     IDs2,
     change_display_name,
@@ -243,16 +244,34 @@ class MainApp(QMainWindow):
     def _load_or_request_game_dir(self) -> Path:
         if CONFIG_FILE.exists():
             with open(CONFIG_FILE, "r") as f:
-                return Path(json.load(f)["game_dir"])
-
-        dialog = SetDirectoryDialog("Set Your Witcher 3 Directory")
-        if dialog.exec() == QDialog.DialogCode.Accepted:
-            game_dir = dialog.get_folder_path()
-            with open(CONFIG_FILE, "w") as f:
-                json.dump({"game_dir": game_dir}, f)
-            return Path(game_dir)
-
-        return Path("foo")
+                game_dir = Path(json.load(f)["game_dir"])
+                if (game_dir / XML_LOCATION).exists():
+                    return game_dir
+                else:
+                    QMessageBox.critical(
+                        self,
+                        "Invalid Game Directory",
+                        f"The previously saved game directory is invalid or missing:\n\n"
+                        f"{game_dir}\n\n"
+                        f"Please select your Witcher 3 directory again.",
+                    )
+        while True:
+            dialog = SetDirectoryDialog("Set Your Witcher 3 Directory")
+            if dialog.exec() == QDialog.DialogCode.Accepted:
+                game_dir = dialog.get_folder_path()
+                game_dir_path = Path(dialog.get_folder_path())
+                if (game_dir_path / XML_LOCATION).exists():
+                    with open(CONFIG_FILE, "w") as f:
+                        json.dump({"game_dir": game_dir}, f)
+                        return Path(game_dir)
+                else:
+                    QMessageBox.critical(
+                        self,
+                        "Invalid Game Directory",
+                        f"The previously saved game directory is invalid or missing:\n\n"
+                        f"{game_dir}\n\n"
+                        f"Please select your Witcher 3 directory again.",
+                    )
 
     def _build_ui(self):
         # ── Left panel: mod list ──────────────────────────────────────
