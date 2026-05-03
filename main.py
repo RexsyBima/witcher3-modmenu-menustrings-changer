@@ -42,7 +42,7 @@ APP_STYLE = """
         background-color: #1e1e1e;
         color: #d4d4d4;
         font-family: "Segoe UI", sans-serif;
-        font-size: 13px;
+        font-size: 13px
     }
     QLabel#sectionTitle {
         font-size: 11px;
@@ -393,7 +393,9 @@ class MainApp(QMainWindow):
 
         msg = QMessageBox(self)
         msg.setWindowTitle("Success")
-        msg.setText(f"<b>{self.selected_mod}</b> has been updated successfully.")
+        msg.setText(
+            f"<b>{self.selected_mod}</b> has been updated successfully. backup file hase been saved as {backup_path}"
+        )
         msg.exec()
 
 
